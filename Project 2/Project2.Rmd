@@ -1,0 +1,67 @@
+---
+title: "Pricing Financial Derivatives Project 2"
+author: "Angus McKay, Laura Roman, Euan Dowers, Veronika Kyuchukova"
+date: "February 2, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 1: Black-Scholes model
+Consider the Black-Scholes model:
+
+$$dX_t=2X_tdt+1.5X_tdB_t\text{, with }X_0=1$$
+The solution to this model is:
+
+$$X_t=e^{1.5B_t+(2-1.5^2/2)t}$$
+
+```{r Exercise 1, echo=FALSE}
+library(ggplot2)
+
+Sn <- function(n,T = 5){
+  # Create function that produces random walk with step size sqrt(T/n)
+  stepsize <- sqrt(T/n)
+  Z <- rbinom(n+1,1,0.5)
+  Z[Z==1] <- stepsize
+  Z[Z==0] <- -stepsize
+  B <- rep(0,n+1)
+  for ( i in 1:n+1) { 
+    B[i] = B[i-1] + Z[i] }
+  return(B)
+}
+
+# Now plot the process Xn(t) for n = 1000 using a Brownian path
+T <- 5
+n <- 1000
+B <- Sn(n)
+t <- seq(0,T,length.out = length(B))
+X <- exp(1.5*B+(2-1.5**2/2)*t)
+dd1 <- as.data.frame(cbind(t,X))
+q1 <- ggplot(data=dd1, aes(x=t)) + 
+  geom_line(aes(y=X)) +
+  ggtitle("projection of Xt using brownian path")+
+  ylab("Xt") + xlab("t") 
+q1
+
+# Using the same Brownian with Euler's scheme
+E <- rep(1,n+1)
+for ( i in 1:n+1) { 
+    E[i] = E[i-1] + 1.5*E[i-1]*(B[i]-B[i-1]) + 2*E[i-1]*T/n }
+dd2 <- as.data.frame(cbind(t,E))
+q2 <- ggplot(data=dd2, aes(x=t)) + 
+  geom_line(aes(y=E)) +
+  ggtitle("projection of Xt using Euler's scheme")+
+  ylab("Xt") + xlab("t") 
+q2
+
+```
+
+
+## Appendix
+##### R code
+```{r appendix 1, ref.label='Exercise 1', eval = FALSE}
+```
