@@ -3,8 +3,8 @@ title: "Pricing Financial Derivatives Project 2"
 author: "Angus McKay, Laura Roman, Euan Dowers, Veronika Kyuchukova"
 date: "February 2, 2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -59,6 +59,10 @@ q2 <- ggplot(data=dd2, aes(x=t)) +
 q2
 
 ```
+
+NOTE: NEED TO COMPARE THESE TO THE SIMULATION OF THE EXACT SOLUTION!?
+
+## Exercise : Black-Scholes model
 
 
 ## Appendix
