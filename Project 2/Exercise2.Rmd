@@ -1,0 +1,173 @@
+---
+title: "Pricing FInancial Derivatives"
+subtitle: "Project 2"
+author: "Veronika Kyuchukova"
+date: "February 20, 2017"
+output: pdf_document
+---
+
+##Exercise 2
+
+We are given a Stochastic Differential Equation:
+
+\begin{align}
+dX_{t}=a(m-X_{t})dt + \sigma dB_{t}\\
+X_{0}=x
+\end{align}
+where a>0, $\sigma$ >0, m$\ge$ 0
+
+\begin{align}
+f(X_{t},t)= e^{at}X_{t}\\
+\Rightarrow^{From~Itô}~ f(X_{t},t)= a X_{t} e^{at}dt + e^{at}dX_{t}
+\end{align}
+
+Substituting $dX_{t}$ with (1) we get:
+
+\begin{align}
+f(X_{t},t) &= a X_{t} e^{at} dt + a e^{at}mdt -ae^{at}X_{t}dt + e^{at}\sigma dB_{t}\\
+\Rightarrow &= a m e^{at} dt + e^{at}\sigma dB_{t}
+\end{align}
+
+Now integrating over $[0,t]$:
+\begin{align}
+f(X_{t},t) = e^{at}X_{t}&= X_{0}+ \int_{0}^{t} a m e^{as} ds + \int_{0}^{t} e^{as}\sigma dB_{s}\\
+\Rightarrow X_{t}&= xe^{-at}+ e^{-at}[me^{as}]_{0}^{t}+ e^{-at}\sigma \int_{0}^{t} e^{as}dB_{s}\\
+X_{t}&= xe^{-at}+m- me^{at}+ e^{-at}\sigma \int_{0}^{t} e^{as}dB_{s}\\
+X_{t}&=m+(x-m)e^{-at}+\sigma e^{-at}\int_{0}^{t}e^{as}dB_{s}
+\end{align}
+
+\begin{align}
+E[X_{t}]= xe^{-at}+m(1-e^{-at})
+\end{align}
+
+
+\begin{align}
+Var[X_{t}] &= E[(X_{t}-E[X_{t}])^2]\\
+           &= E\left[ \int_{0}^{t} \sigma^{2} e^{2(s-t)a}dB_{s}\right]\\
+           &= \sigma^{2}e^{-2at}E\left[ \int_{0}^{t}  e^{2sa}dB_{s}\right]\\
+           &= \sigma^{2}e^{-2at} \left[ \frac{e^{2sa}}{2a} \right]_{0}^{t} \\
+           &= \frac{\sigma^{2}}{2a} e^{-at}( e^{at}-1)\\
+           &= \frac{\sigma^2}{2a}(1-e^{2at})
+\end{align}
+
+
+
+As $t\rightarrow \infty,~xe^{-at}\rightarrow0,~(1-e^{-at})\rightarrow1$ 
+
+\begin{align}
+\Rightarrow lim_{t \rightarrow \infty}E[X_{t}]= m
+\end{align}
+
+
+
+```{r, eval=TRUE, echo=FALSE}
+library(ggplot2)
+
+set.seed(444)
+
+N <- 1000
+T <- 1
+x <- 0.7
+dt <- 1 / N
+
+Vasicek_function <- function(m, sigma, a){
+  dX <- numeric ( N +1)
+  dX[1] <- x
+  Z <- rnorm ( N, 0, 1 )
+  for ( i in 1: N )
+    dX [i +1] <- dX [ i ] + a*(m -  dX [ i ]) * dt + sigma * sqrt ( dt ) * Z [ i ]
+  dX <- ts (dX , start =0 , deltat =1 / N )
+  return(dX)
+}
+
+V<-matrix(0,7,N+1)
+m<-c(2,1,5,2,2,2,2)
+sigma<-c(2,2,2,5,1,2,2)
+a<-c(2,2,2,2,2,5,1)
+
+for (i in 1:nrow(V)){
+  V[i,]<-Vasicek_function(m[i],sigma[i],a[i])
+}
+
+color<-c("red","blue","yellow","black","green","purple","pink")
+
+plot(V[1,], main= "Trajectories of Vasicek model",
+     col="red", ylim=c(-3,6.5), xlab="t", ylab="X",type = "l")
+grid(5,5,col="black")
+
+for (i in 2:nrow(V)){
+lines(V[i,], col= color[i])
+}
+
+legend("topleft",
+       c("m=2, sigma=2, a=2","m=1, sigma=2, a=2","m=5, sigma=2, a=2",
+         "m=2, sigma=5, a=2","m=2, sigma=1, a=2","m=2, sigma=2, a=5","m=2, sigma=2, a=1"),
+       col=c("red","blue","yellow","black",
+               "green","purple","pink"),
+       lty=c(1,1),
+       cex=0.58)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+##Appendix
+```{r, eval=FALSE}
+library(ggplot2)
+
+
+N <- 1000
+T <- 1
+x <- 0.7
+dt <- 1 / N
+
+Vasicek_function <- function(m, sigma, a){
+  dX <- numeric ( N +1)
+  dX[1] <- x
+  Z <- rnorm ( N, 0, 1 )
+  for ( i in 1: N )
+    dX [i +1] <- dX [ i ] + a*(m -  dX [ i ]) * dt + sigma * sqrt ( dt ) * Z [ i ]
+  dX <- ts (dX , start =0 , deltat =1 / N )
+  return(dX)
+}
+
+V<-matrix(0,7,N+1)
+m<-c(2,1,5,2,2,2,2)
+sigma<-c(2,2,2,5,1,2,2)
+a<-c(2,2,2,2,2,5,1)
+
+for (i in 1:nrow(V)){
+  V[i,]<-Vasicek_function(m[i],sigma[i],a[i])
+}
+V
+color<-c("red","blue","yellow","black","green","purple","pink")
+
+plot(V[1,], main= "Trajectories of Vasicek model",
+     col="red", ylim=c(-3,6.5), xlab="t", ylab="X",type = "l")
+grid(5,5,col="black")
+
+for (i in 2:nrow(V)){
+lines(V[i,], col= color[i])
+}
+
+legend("topleft",
+       c("m=2, sigma=2, a=2","m=1, sigma=2, a=2","m=5, sigma=2, a=2",
+         "m=2, sigma=5, a=2","m=2, sigma=1, a=2","m=2, sigma=2, a=5","m=2, sigma=2, a=1"),
+       col=c("red","blue","yellow","black",
+               "green","purple","pink"),
+       lty=c(1,1),
+       cex=0.58)
+
+```
