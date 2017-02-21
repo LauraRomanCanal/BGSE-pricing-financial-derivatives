@@ -1,7 +1,7 @@
 ---
 title: "Pricing FInancial Derivatives"
 subtitle: "Project 2"
-author: "Veronika Kyuchukova"
+author: "Angus McKay, Laura Roman, Euan Dowers, Veronika Kyuchukova"
 date: "February 20, 2017"
 output: pdf_document
 ---
@@ -74,9 +74,10 @@ Vasicek_function <- function(m, sigma, a){
   dX <- numeric ( N +1)
   dX[1] <- x
   Z <- rnorm ( N, 0, 1 )
-  for ( i in 1: N )
+  for ( i in 1: N ){
     dX [i +1] <- dX [ i ] + a*(m -  dX [ i ]) * dt + sigma * sqrt ( dt ) * Z [ i ]
   dX <- ts (dX , start =0 , deltat =1 / N )
+  }
   return(dX)
 }
 
@@ -137,10 +138,11 @@ Vasicek_function <- function(m, sigma, a){
   dX <- numeric ( N +1)
   dX[1] <- x
   Z <- rnorm ( N, 0, 1 )
-  for ( i in 1: N )
+  for ( i in 1: N ){
     dX [i +1] <- dX [ i ] + a*(m -  dX [ i ]) * dt + sigma * sqrt ( dt ) * Z [ i ]
   dX <- ts (dX , start =0 , deltat =1 / N )
   return(dX)
+  }
 }
 
 V<-matrix(0,7,N+1)
