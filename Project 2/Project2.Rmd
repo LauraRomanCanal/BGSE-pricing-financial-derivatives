@@ -1,0 +1,204 @@
+---
+title: "Pricing Financial Derivatives Project 2"
+author: "Angus McKay, Laura Roman, Euan Dowers, Veronika Kyuchukova"
+date: "February 2, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 1: Black-Scholes model
+Consider the Black-Scholes model:
+
+$$dX_t=2X_tdt+1.5X_tdB_t\text{, with }X_0=1$$
+The solution to this model is:
+
+$$X_t=e^{1.5B_t+(2-1.5^2/2)t}$$
+
+```{r Exercise 1, echo=FALSE}
+library(ggplot2)
+
+Sn <- function(n,T = 5){
+  # Create function that produces random walk with step size sqrt(T/n)
+  stepsize <- sqrt(T/n)
+  Z <- rbinom(n+1,1,0.5)
+  Z[Z==1] <- stepsize
+  Z[Z==0] <- -stepsize
+  B <- rep(0,n+1)
+  for ( i in 1:n+1) { 
+    B[i] = B[i-1] + Z[i] }
+  return(B)
+}
+
+# Now plot the process Xn(t) for n = 1000 using a Brownian path
+T <- 5
+n <- 1000
+B <- Sn(n)
+t <- seq(0,T,length.out = length(B))
+X <- exp(1.5*B+(2-1.5**2/2)*t)
+dd1 <- as.data.frame(cbind(t,X))
+q1 <- ggplot(data=dd1, aes(x=t)) + 
+  geom_line(aes(y=X)) +
+  ggtitle("projection of Xt using brownian path")+
+  ylab("Xt") + xlab("t") 
+q1
+
+# Using the same Brownian with Euler's scheme
+E <- rep(1,n+1)
+for ( i in 1:n+1) { 
+    E[i] = E[i-1] + 1.5*E[i-1]*(B[i]-B[i-1]) + 2*E[i-1]*T/n }
+dd2 <- as.data.frame(cbind(t,E))
+q2 <- ggplot(data=dd2, aes(x=t)) + 
+  geom_line(aes(y=E)) +
+  ggtitle("projection of Xt using Euler's scheme")+
+  ylab("Xt") + xlab("t") 
+q2
+
+```
+
+As expected the results produce very similar outputs. When looking at the figures used in the charts the numbers are actually slightly different but it is not noticeable in the charts.
+
+## Exercise 2: Vasicek model for interest rates
+
+```{r Exercise 2, echo=FALSE}
+m1 <- 2
+sigma1 <- 2
+a1 <- 2
+x1 <- 2/3
+V1 <- rep(x1,n+1)
+for ( i in 1:n+1) { 
+    V1[i] = V1[i-1] + sigma1*(B[i]-B[i-1]) + a1*(m1-V1[i-1])*T/n }
+
+m2 <- 1
+V2 <- rep(x1,n+1)
+for ( i in 1:n+1) { 
+    V2[i] = V2[i-1] + sigma1*(B[i]-B[i-1]) + a1*(m2-V2[i-1])*T/n }
+
+m3 <- 5
+V3 <- rep(x1,n+1)
+for ( i in 1:n+1) { 
+    V3[i] = V3[i-1] + sigma1*(B[i]-B[i-1]) + a1*(m3-V3[i-1])*T/n }
+
+sigma4 <- 5
+V4 <- rep(x1,n+1)
+for ( i in 1:n+1) { 
+    V4[i] = V4[i-1] + sigma4*(B[i]-B[i-1]) + a1*(m1-V4[i-1])*T/n }
+
+sigma5 <- 1
+V5 <- rep(x1,n+1)
+for ( i in 1:n+1) { 
+    V5[i] = V5[i-1] + sigma5*(B[i]-B[i-1]) + a1*(m1-V5[i-1])*T/n }
+
+a6 <- 5
+V6 <- rep(x1,n+1)
+for ( i in 1:n+1) { 
+    V6[i] = V6[i-1] + sigma1*(B[i]-B[i-1]) + a6*(m1-V6[i-1])*T/n }
+
+a7 <- 1
+V7 <- rep(x1,n+1)
+for ( i in 1:n+1) { 
+    V7[i] = V7[i-1] + sigma1*(B[i]-B[i-1]) + a7*(m1-V7[i-1])*T/n }
+
+ggplot() +
+  geom_line(aes(x = t, y = V1, colour = "m=2, sigma=2, a=2"), size = 0.2) +
+  geom_line(aes(x = t, y = V2, colour = "m=1, sigma=2, a=2"), size = 0.2) +
+  geom_line(aes(x = t, y = V3, colour = "m=5, sigma=2, a=2"), size = 0.2) +
+  geom_line(aes(x = t, y = V4, colour = "m=2, sigma=5, a=2"), size = 0.2) +
+  geom_line(aes(x = t, y = V5, colour = "m=2, sigma=1, a=2"), size = 0.2) +
+  geom_line(aes(x = t, y = V6, colour = "m=2, sigma=2, a=5"), size = 0.2) +
+  geom_line(aes(x = t, y = V7, colour = "m=2, sigma=2, a=1"), size = 0.2) +
+  labs(title = "Trajectories of Vasicek model", x = "t", y = "X")
+
+
+```
+
+The mean reverting phenomenon can be observed, particularly when comparing the trajectories where m = 2 and m = 5. When sigma is higher it can be seen that the mean reversion is exhibited but there is much more volatility around the mean value.
+
+## Exercise 3: Vasicek model for interest rates
+
+```{r Exercise 3, echo=FALSE}
+alpha1 <- 6
+beta1 <- 1
+sig1 <- 1
+r0 <- 0
+CIR1 <- rep(r0,n+1)
+for ( i in 1:n+1) { 
+    CIR1[i] = CIR1[i-1] + sig1*sqrt(CIR1[i-1])*(B[i]-B[i-1]) + (alpha1-beta1*CIR1[i-1])*T/n }
+
+beta2 <- 2
+sig2 <- 2
+CIR2 <- rep(r0,n+1)
+for ( i in 1:n+1) { 
+    CIR2[i] = CIR2[i-1] + sig2*sqrt(CIR2[i-1])*(B[i]-B[i-1]) + (alpha1-beta2*CIR2[i-1])*T/n }
+
+beta3 <- 5
+sig3 <- 3
+CIR3 <- rep(r0,n+1)
+for ( i in 1:n+1) { 
+    CIR3[i] = CIR3[i-1] + sig3*sqrt(CIR3[i-1])*(B[i]-B[i-1]) + (alpha1-beta3*CIR3[i-1])*T/n }
+
+alpha4 <- 2
+beta4 <- 2
+sig4 <- 2
+CIR4 <- rep(r0,n+1)
+for ( i in 1:n+1) { 
+    CIR4[i] = CIR4[i-1] + sig4*sqrt(CIR4[i-1])*(B[i]-B[i-1]) + (alpha4-beta4*CIR4[i-1])*T/n }
+
+alpha5 <- 1
+beta5 <- 1
+sig5 <- 1
+CIR5 <- rep(r0,n+1)
+for ( i in 1:n+1) { 
+    CIR5[i] = CIR5[i-1] + sig5*sqrt(CIR5[i-1])*(B[i]-B[i-1]) + (alpha5-beta5*CIR5[i-1])*T/n }
+
+alpha6 <- 1
+beta6 <- 2
+sig6 <- 1
+CIR6 <- rep(r0,n+1)
+for ( i in 1:n+1) { 
+    CIR6[i] = CIR6[i-1] + sig6*sqrt(CIR6[i-1])*(B[i]-B[i-1]) + (alpha6-beta6*CIR6[i-1])*T/n }
+
+alpha7 <- 1
+beta7 <- 0.1
+sig7 <- 3.7
+CIR7 <- rep(r0,n+1)
+for ( i in 1:n+1) { 
+    CIR7[i] = CIR7[i-1] + sig7*sqrt(CIR7[i-1])*(B[i]-B[i-1]) + (alpha7-beta7*CIR7[i-1])*T/n }
+
+alpha8 <- 1
+beta8 <- 10
+sig8 <- 1
+CIR8 <- rep(r0,n+1)
+for ( i in 1:n+1) { 
+    CIR8[i] = CIR8[i-1] + sig8*sqrt(CIR8[i-1])*(B[i]-B[i-1]) + (alpha8-beta8*CIR8[i-1])*T/n }
+
+ggplot() +
+  geom_line(aes(x = t, y = CIR1, colour = 'alpha=6, beta=1, sigma=1'), size = 0.2) +
+  geom_line(aes(x = t, y = CIR2, colour = 'alpha=6, beta=2, sigma=2'), size = 0.2) +
+  geom_line(aes(x = t, y = CIR3, colour = 'alpha=6, beta=5, sigma=3'), size = 0.2) +
+  geom_line(aes(x = t, y = CIR4, colour = 'alpha=2, beta=2, sigma=2'), size = 0.2) +
+  geom_line(aes(x = t, y = CIR5, colour = 'alpha=1, beta=1, sigma=1'), size = 0.2) +
+  geom_line(aes(x = t, y = CIR6, colour = 'alpha=1, beta=2, sigma=1'), size = 0.2) +
+  geom_line(aes(x = t, y = CIR8, colour = 'alpha=1, beta=10, sigma=1'), size = 0.2) +
+  labs(title = "Trajectories of CIR model", x = "t", y = "r")
+
+
+
+```
+
+
+
+## Appendix
+##### R code
+```{r appendix 1, ref.label='Exercise 1', eval = FALSE}
+```
+
+```{r appendix 1, ref.label='Exercise 2', eval = FALSE}
+```
+
+```{r appendix 1, ref.label='Exercise 3', eval = FALSE}
+```
