@@ -32,7 +32,7 @@
 {\bf (i) Write its solution \\
 (ii) Generate on an interval a Brownian path. Using that path plot a trajectory of the solution. Using the same Brownian path use the Euler scheme approximation to plot another trajectory of the equation. Compare these plots with the simulation of the fact solution.} \\
 
-From the differential equation $dX_t = 2X_t dt + 1.5X_tdB_t$ we can rewrite it as follows:
+We can rewrite the differential equation $dX_t = 2X_t dt + 1.5X_tdB_t$ as follows:
 \begin{equation}
 \frac{dX_t}{X_t} = 2dt + 1.5dB_t
 \end{equation}
@@ -40,11 +40,11 @@ So we can integrate as follows:
 \begin{equation} \label{uno}
 \int_0^t \frac{dX_s}{X_s} = \int_0^t2ds + \int_0^t 1.5dB_s = 2t + 1.5B_t
 \end{equation}
-Let's now define the following function
+Now let
 \begin{equation}
-f(t,X_t)= f(X_t)= ln(X_t)
+f(t,X_t)= f(X_t)= ln(X_t).
 \end{equation}
-Such that its partial derivatives are:
+Its partial derivatives are therefore:
 \begin{align}
  \frac{\partial f(x,t)}{\partial t}= 0 &&
  \frac{\partial f(t,x)}{\partial x} = \frac{1}{x}&&
@@ -60,27 +60,26 @@ Where $dX_t^2$ can be computed by using the differential equation provided:
 \begin{align}
 (dX_t)^2   = (2X_tdt+1.5X_tdB_t)^2 = 4X_t^2(dt)^2 + (1.5X_t)^2(dB_t)^2+2\cdot2\cdot1.5X_t^2dtdB_t
 \end{align}
-From Ito's calculus we do know: $(dt)^2=0; (dB_t)^2=dt$ and $dtdB_t=0$. Followingly;
+From Ito's calculus we do know: $(dt)^2=0; (dB_t)^2=dt$ and $dtdB_t=0$. Therefore
 \begin{align}
 (dX_t)^2   = (1.5)^2X_t^2dt
 \end{align}
-Such that;
+and so
 \begin{equation}
-d(lnX) = \frac{dX_t}{X_t} - \frac{1}{2}\frac{-1}{X_t^2}(1.5 \cdot X_t)^2 dt  
+d(lnX) = \frac{dX_t}{X_t} - \frac{1}{2}\frac{-1}{X_t^2}(1.5 \cdot X_t)^2 dt  .
 \end{equation}
 We can now integrate this expression:
 \begin{equation}
 \int_0^t d(lnX) = \int_0^t \frac{dX_s}{X_s} - \int_0^t \frac{-1.5^2}{2} ds   
 \end{equation}
-And finally:
 \begin{equation}\label{dos}
-\ln \frac{X_t}{X_0} =  \int_0^t \frac{dX_s}{X_s} -  \frac{-1.5^2}{2} t
+\Rightarrow \ln \frac{X_t}{X_0} =  \int_0^t \frac{dX_s}{X_s} -  \frac{-1.5^2}{2} t
 \end{equation}
-Where the term $\int_0^t \frac{dX_s}{X_s}$ from equation (\ref{dos}) has the expression presented in equation (\ref{uno}), such that if substituted we get:
+Substituting the term $\int_0^t \frac{dX_s}{X_s}$ from equation (\ref{dos}) with the expression given in equation (\ref{uno}) gives
 \begin{equation}
 \ln \frac{X_t}{X_0} = 1.5B_t + \bigg(2-\frac{1.5^2}{2}\bigg)t
 \end{equation}
-Therefore;
+Therefore
 \begin{equation}
 X_t = X_0 \exp\bigg(1.5B_t+0.875\cdot t\bigg)
 \end{equation}
@@ -107,103 +106,100 @@ We can compute its derivative by:
 d(f(t,X_t)) = d(e^{at}X_t) = e^{at}X_t+X_t\cdot a e^{at}dt = e^{at} \bigg(dX_t + aX_t dt \bigg)
 \end{equation}
 On the other hand, we are considering the SDE:
-\begin{equation}
-dX_t = a(m-X_t)dt + \sigma dB_t
-\end{equation}
-which can be rewritten by reordering its terms as:
-\begin{equation}\label{sde}
-dX_t + aX_tdt = amdt+\sigma dB_t
-\end{equation}
-So we realize that the left-hand side of the previous equation (ref{see}) multiplied by $e^{at}$ is in fact equation (\ref{f}):
+\begin{align}
+dX_t &= a(m-X_t)dt + \sigma dB_t \\
+\label{sde}
+\Rightarrow dX_t + aX_tdt &= amdt+\sigma dB_t.
+\end{align}
+The left-hand side of equation (\ref{sde}) multiplied by $e^{at}$ gives equation (\ref{f}):
 \begin{equation}
 e^{at} \cdot \bigg(dX_t + aX_tdt \bigg) = d(e^{at}X_t)
 \end{equation}
-Such that we can rewrite the SDE as follows:
+Therefore, we can rewrite the SDE as
 \begin{equation}
  d(e^{at}X_t) = e^{at} \cdot \bigg(dX_t + aX_tdt \bigg)  = e^{at} \cdot \bigg( amdt+\sigma dB_t \bigg)
 \end{equation}
-Therefore we end up with the following equation:
+so we obtain
 \begin{equation}\label{hi}
  d(e^{at}X_t) = ame^{at}dt+\sigma e^{at} dB_t 
 \end{equation}
-In order to obtain the solution of such SDE, we integrate equation (\ref{hi}):
+To solve this SDE, integrate equation (\ref{hi}):
 \begin{align}
 & \int_0^t d(e^{at}X_t) = \int_0^s  ame^{at}dt+\int_0^s \sigma e^{at} dB_t \\
 & X_te^{at}-X_0  = am\bigg(\frac{e^{at}}{a} - \frac{1}{a}\bigg) + \sigma \int_0^s e^{as}dB_s \\
 & X_t = m\bigg(1-e^{-at}\bigg) + X_0 e^{-at} + \sigma \int_0^s e^{s-t}dB_s 
 \end{align}
 
-Finally, recall $X_0=x$ such that:
+Finally, since $X_0=x$:
 \begin{equation}\label{xt}
 \boxed{X_t = m\bigg(1-e^{-at}\bigg) + x e^{-at} + \sigma \int_0^s e^{s-t}dB_s }
 \end{equation}
 
 (ii) We proceed to compute the expectation and variance of $X_t$. Using equation (\ref{xt}):
 \begin{align}
-\mathbf{E}[X_t] &= \mathbf{E}[m(1-e^{-at}) + x e^{-at} ] + \mathbf{E}[\sigma \int_0^s e^{s-t}dB_s ] = \\
-&= m(1-e^{-at}) + x e^{-at} + \sigma \mathbf{E}[ \int_0^s e^{s-t}dB_s ]
+\mathbf{E}[X_t] &= \mathbf{E}\left[m(1-e^{-at}) + x e^{-at}  + \sigma \int_0^s e^{s-t}dB_s \right] \\
+&= m(1-e^{-at}) + x e^{-at} + \sigma \mathbf{E}\left[ \int_0^s e^{s-t}dB_s \right].
 \end{align}
 
 So we need to compute the expectation of the stochastic integral: $I_t =\int_0^s e^{s-t}dB_s $. In the limit $n\longrightarrow \infty$, we can approximate such stochastic integral as a left-hand Riemann sum; for $t_n := t$ :
 \begin{equation}
 I_t \sim_{n\longrightarrow \infty} \sum_{j=1}^n e^{a(t_j-t)} \bigg(B_{tj}-B_{tj-1}\bigg)
 \end{equation}
-Such that the expectation of the stochastic integral can be computed as follows:
+so the expectation of the stochastic integral is
 \begin{align}
-\mathbf{E}[I_t] &\sim_{n\longrightarrow \infty} \mathbf{E}[\sum_{j=1}^n e^{a(t_j-t)} \bigg(B_{tj}-B_{tj-1}\bigg)]  \\
-& \sum_{j=1}^n e^{a(t_j-t)} \mathbf{E}[(B_{tj}-B_{tj-1}] = 0
+\mathbf{E}[I_t] &\sim_{n\longrightarrow \infty} \mathbf{E}\left[\sum_{j=1}^n e^{a(t_j-t)} \bigg(B_{tj}-B_{tj-1}\bigg)\right]  \\
+&= \sum_{j=1}^n e^{a(t_j-t)} \mathbf{E}[B_{tj}-B_{tj-1}] = 0
 \end{align}
-As for a brownian motion, $ \mathbf{E}[(B_{tj}-B_{tj-1}] = 0$. Finally, introducing this result into the expectation of $X_t$ expression, in the limit of $n\longrightarrow \infty$ we get:
+since for a brownian motion, $ \mathbf{E}[(B_{tj}-B_{tj-1}] = 0$. Finally, introducing this result into the expectation of $X_t$ expression, in the limit of $n\longrightarrow \infty$ we get:
 \begin{equation}\label{ext}
 \boxed{\mathbf{E}[X_t] =m(1-e^{-at}) + x e^{-at} }
 \end{equation}
 
-On the other hand, we now compute the variance of $X_t$:
+Computing the variance of $X_t$:
 \begin{align}\label{final}
 Var[X_t] = \mathbf{E}[X_t^2]-(\mathbf{E}[X_t])^2
 \end{align}
-Where $(\mathbf{E}[X_t])^2$ is, from expression (\ref{ext}) is:
+Where $(\mathbf{E}[X_t])^2$ is, from expression (\ref{ext})
 \begin{equation}
 (\mathbf{E}[X_t])^2 = \bigg(m(1-e^{-at}) + x e^{-at} \bigg)^2
 \end{equation} 
 From equation (\ref{xt}) we can compute:
 \begin{align}\label{var}
-\mathbf{E}[X_t^2] &= \mathbf{E}[(m(1-e^{-at}) + x e^{-at} )^2]+ \mathbf{E}[ \sigma^2 (\int_0^s e^{s-t}dB_s)^2 ] + 2\mathbf{E}[(m(1-e^{-at}) + x e^{-at})\cdot \int_0^s e^{s-t}dB_s] = \\
-&= m(1-e^{-at}) + x e^{-at} )^2+ \sigma^2 \mathbf{E}[ (\int_0^s e^{s-t}dB_s)^2 ] + 2(m(1-e^{-at}) + x e^{-at})\mathbf{E}[ \int_0^s e^{s-t}dB_s]
+\mathbf{E}[X_t^2] &= \mathbf{E}[(m(1-e^{-at}) + x e^{-at} )^2]+ \mathbf{E}\left[ \sigma^2 (\int_0^s e^{s-t}dB_s)^2 \right] + 2\mathbf{E}\left[(m(1-e^{-at}) + x e^{-at})\cdot \int_0^s e^{s-t}dB_s\right] \\
+&= m(1-e^{-at}) + x e^{-at} )^2+ \sigma^2 \mathbf{E}\left[ (\int_0^s e^{s-t}dB_s)^2 \right] + 2(m(1-e^{-at}) + x e^{-at})\mathbf{E}\left[ \int_0^s e^{s-t}dB_s\right]
 \end{align}
 \begin{itemize}
-\item {Firstly, we can compute the second term which is once again, as a left-hand Rimman sum:}
+\item {First, we can compute the second term which is once again, as a left-hand Riemann sum:}
 \begin{align}
-\mathbf{E}[(\int_0^s e^{s-t}dB_s)^2] \sim_{n\longrightarrow \infty} \sum_{j=1}^n e^{2a(t_j-t)} \mathbf{E}[(B_{tj}-B_{tj-1})^2] =  \sum_{j=1}^n e^{2a(t_j-t)} (t_j-t_{j-1})
+\mathbf{E}\left[\left(\int_0^s e^{s-t}dB_s\right)^2\right] \sim_{n\longrightarrow \infty} \sum_{j=1}^n e^{2a(t_j-t)} \mathbf{E}[(B_{tj}-B_{tj-1})^2] =  \sum_{j=1}^n e^{2a(t_j-t)} (t_j-t_{j-1})
 \end{align}
 Where we have used the brownian process property; $\mathbf{E}[(B_{tj}-B_{tj-1})^2] = (t_j-t_{j-1})$. Therefore;  the expectation of a stochastic integral  in the limit of $\longrightarrow \infty$ can be computed:
 \begin{equation}
-\mathbf{E}[(\int_0^s e^{s-t}dB_s)^2] \sim  \int_0^t e^{2a(s-t)ds =  e^{-2at}\bigg(\frac{e^{2at}}{2a}-\frac{1}{2a}\bigg)} 
+\mathbf{E}\left[\left(\int_0^s e^{s-t}dB_s\right)^2\right] \sim  \int_0^t e^{2a(s-t)ds =  e^{-2at}\left(\frac{e^{2at}}{2a}-\frac{1}{2a}\right)} 
 \end{equation}
-And so;
+And so
 \begin{equation}
-\mathbf{E}[(\int_0^s e^{s-t}dB_s)^2]  \sim \frac{1}{2a} (1-e^{2at})
+\mathbf{E}\left[\left(\int_0^s e^{s-t}dB_s\right)^2\right]  \sim \frac{1}{2a} (1-e^{2at})
 \end{equation}
 
 \item {We now want to compute the third term of the expression (\ref{var}), which is:}
 \begin{equation}
-2(m(1-e^{-at}) + x e^{-at})\mathbf{E}[ \int_0^s e^{s-t}dB_s]  = 0
+2(m(1-e^{-at}) + x e^{-at})\mathbf{E}\left[ \int_0^s e^{s-t}dB_s\right]  = 0
 \end{equation}
 If we recall that $\mathbf{E}[ \int_0^s e^{s-t}dB_s]  = 0$ from the previous section.
 \end{itemize}
 
-Finally, putting these results together, into equation (\ref{final}), and :
+Finally, putting these results together, into equation (\ref{final}) we obtain
 \begin{equation}
-Var[X_t] =  \mathbf{E}[X_t^2]-(\mathbf{E}[X_t])^2 = (m(1-e^{-at}) + x e^{-at} )^2 - (m(1-e^{-at}) + x e^{-at} )^2+ \frac{\sigma^2}{2a} (1-e^{2at})
+Var[X_t] =  \mathbf{E}[X_t^2]-(\mathbf{E}[X_t])^2 = (m(1-e^{-at}) + x e^{-at} )^2 - (m(1-e^{-at}) + x e^{-at} )^2+ \frac{\sigma^2}{2a} (1-e^{2at}).
 \end{equation}
-Therefore;
+Therefore,
 \begin{equation}
 \boxed{Var[X_t] =   \frac{\sigma^2}{2a} (1-e^{2at})}
 \end{equation}
 
 
 \pagebreak
-
 
 \title {{\bf Exercise 3:} {\bf The Cox-Ingersoll-Ross (CIR) model. }}
 {\bf The CIR model for the interest rate process $(r_t, t\in[0,T])$ is}:
@@ -216,80 +212,78 @@ Therefore;
 
 (ii) {\bf Using the Euler's scheme on an interval simulate several trajectories of the process for different values of $\alpha, \beta,\sigma$. Take into account that this scheme does not necessarily preserve positivity.} \\
 
-For a function $f(t,x)$, recall Ito's general formula as:
+For a function $f(t,x)$, recall Ito's general formula:
 \begin{equation}\label{ito}
 df(t,x) = \frac{\partial f(x,t)}{\partial t} dt + \frac{\partial f(t,x)}{\partial x}dx + \frac{1}{2}\frac{\partial^2f(x,t)}{\partial x^2}(dx)^2
 \end{equation}
 
-Let f(x,t) be:
+Let $f(x,t)$ be given by
 \begin{equation}
 f(x,t)= e^{\beta t}x
 \end{equation}
-Such that the partial derivatives are:
+so
 \begin{align}
  \frac{\partial f(x,t)}{\partial t}= \beta e^{\beta t} &&
  \frac{\partial f(t,x)}{\partial x} = e^{\beta t} &&
- \frac{\partial^2f(x,t)}{\partial x^2} = \frac{\partial}{\partial x} (e^{\beta t}) = 0 
+ \frac{\partial^2f(x,t)}{\partial x^2} = \frac{\partial}{\partial x} (e^{\beta t}) = 0 .
 \end{align}
 
-That placed into Ito's general formula (\ref{ito}), we get:
+Therefore, from equation (\ref{ito}) we get
 \begin{equation}
-df(t,x) =  \beta e^{\beta t}dt + e^{\beta t} dx 
+df(t,x) =  \beta e^{\beta t}dt + e^{\beta t} dx.
 \end{equation}
-
-Let $x := r_t$, the previous equation is rewritten as follows:
-\begin{equation} (\label{dif})
+Letting $x := r_t$, the previous equation gives
+\begin{equation}\label{dif}
 d( e^{\beta t} r_t) =  \beta e^{\beta t}dt + e^{\beta t} dr_t
 \end{equation}
 
-On the other hand, the CIR model for the interest rate introduces the following differential equation:
+The CIR model of interest rates introduces the following differential equation:
 \begin{align}
 dr_t = (\alpha - \beta r_t)dt + \sigma \sqrt{r_t}dB_t
 \end{align} 
-Which can be rewritten rearranging terms:
-\begin{align}\label{dos}
+which can be rewritten as
+\begin{align}\label{cir}
 dr_t +\beta r_t dt = \alpha dt + \sigma \sqrt{r_t}dB_t
 \end{align} 
-We do realize that the left-hand side of this equation multiplied by $e^{\beta t}$ is in fact the expression of the differential of $f(r_t,t)=e^{\beta t}\cdot r_t$; that is
+Note that the left-hand side of this equation multiplied by $e^{\beta t}$ is the differential of $f(r_t,t)=e^{\beta t}\cdot r_t$:
 \begin{equation}
 d( e^{\beta t} r_t) =  \beta e^{\beta t}dt + e^{\beta t} dr_t = e^{\beta t} \left(dr_t\right)
 \end{equation}
-So we can rewrite expression (\ref{dos}) in terms of $d( e^{\beta t} r_t)$ by multiplying  $e^{\beta t}$ to left and right side:
+So we can rewrite equation (\ref{cir}) in terms of $d( e^{\beta t} r_t)$ by multiplying by  $e^{\beta t}$ on both sides:
 \begin{equation}
-d( e^{\beta t} r_t)  = e^(\beta t ) \left(dr_t+\beta r_t dt\right) =  e^(\beta t ) (\alpha dt + \sigma \sqrt{r_t}dB_t)
+d( e^{\beta t} r_t)  = e^{\beta t } \left(dr_t+\beta r_t dt\right) =  e^{\beta t } (\alpha dt + \sigma \sqrt{r_t}dB_t).
 \end{equation}
-Such that we now are left to integrate:
+Integrating:
 \begin{equation}
-d( e^{\beta t} r_t)  =  e^(\beta t ) \alpha dt +  e^(\beta t ) \sigma \sqrt{r_t}dB_t
+d( e^{\beta t} r_t)  =  e^{\beta t } \alpha dt +  e^{\beta t } \sigma \sqrt{r_t}dB_t
 \end{equation}
-That is;
+gives
 \begin{align}
-& \int_0^t d( e^{\beta s} r_s) = \int_0^s e^(\beta s ) \alpha ds +  \int_0^s e^(\beta s ) \sigma \sqrt{s_t}dB_s \\
-& r_t e^{\beta t} -r_0 = \alpha \bigg(\frac{e^(\beta t)}{\beta}-\frac{1}{\beta}\bigg) + \sigma \int_0^s e^(\beta s)\sqrt{r_s}dB_s \\
-& r_t = r_0 e^(-\beta t) + \frac{\alpha}{\beta} \bigg(1-e^(-\beta t)\bigg) + \sigma \int_0^s \sqrt{r_s}dB_s 
+& \int_0^t d( e^{\beta s} r_s) = \int_0^s e^{\beta s} \alpha ds +  \int_0^s e^{\beta s} \sigma \sqrt{s_t}dB_s \\
+& r_t e^{\beta t} -r_0 = \alpha \bigg(\frac{e^{\beta t}}{\beta}-\frac{1}{\beta}\bigg) + \sigma \int_0^s e^(\beta s)\sqrt{r_s}dB_s \\
+& r_t = r_0 e^{-\beta t} + \frac{\alpha}{\beta} \bigg(1-e^{-\beta t}\bigg) + \sigma \int_0^s \sqrt{r_s}dB_s 
 \end{align}
-Recall $r_0=0$; therefore:
+and since $r_0 = 0$
 \begin{equation}
 \boxed{r_t = \frac{\alpha}{\beta} \bigg(1-e^{-\beta t}\bigg) + \sigma \int_0^s \sqrt{r_s}dB_s }
 \end{equation}
 
-We now proceed to compute the expected value of $r_t$. That is;
+We now proceed to compute the expected value of $r_t$
 \begin{align}
-\mathbf{E}[r_t] &= \mathbf{E} [\frac{\alpha}{\beta} \bigg(1-e^(-\beta t)\bigg) + \sigma \int_0^s \sqrt{r_s}dB_s ] = \\
-&= \mathbf{E} [\frac{\alpha}{\beta} \bigg(1-e^(-\beta t)\bigg)] +\mathbf{E}[ \sigma \int_0^s \sqrt{r_s}dB_s ] = \\
-&= \frac{\alpha}{\beta} \bigg(1-e^(-\beta t)\bigg) +\sigma \mathbf{E}[ \int_0^s \sqrt{r_s}dB_s ] 
+\mathbf{E}[r_t] &= \mathbf{E} \left[\frac{\alpha}{\beta} \bigg(1-e^{-\beta t}\bigg) + \sigma \int_0^s \sqrt{r_s}dB_s \right] \\
+&= \mathbf{E} \left[\frac{\alpha}{\beta} \bigg(1-e^{-\beta t}\bigg)\right] +\mathbf{E}\left[ \sigma \int_0^s \sqrt{r_s}dB_s \right] \\
+&= \frac{\alpha}{\beta} \bigg(1-e^{-\beta t}\bigg) +\sigma \mathbf{E}\left[ \int_0^s \sqrt{r_s}dB_s \right] .
 \end{align}
 
-We need to calculte the expectation of the stochastic integral $I_t = \int_0^s \sqrt{r_s}dB_s$. In order to do so, we will compute the left-hand Riemann summation; such that:
+In order to  calculate the expectation of the stochastic integral $I_t = \int_0^s \sqrt{r_s}dB_s$ consider the left-hand Riemann summation:
 \begin{align}\label{it}
-I_t \sim_{n \rightarrow \infty} \sum_{j=1}^{n} \sqrt{r_{tj-1}}(B_{tj}-B_{tj-1})
+I_t \sim_{n \rightarrow \infty} \sum_{j=1}^{n} \sqrt{r_{tj-1}}(B_{tj}-B_{tj-1}).
 \end{align}
-
 So if we take the expectation of (\ref{it}): 
 \begin{equation}
 \mathbf{E}[I_t] = \sum_{j=1}^{n} \sqrt{r_{tj-1}}\mathbf{E}[B_{tj}-B_{tj-1}] = 0
 \end{equation}
-As for a brownian process, $\mathbf{E}[B_{tj}-B_{tj-1}] = 0$.  Finally, 
+since for a brownian process, $\mathbf{E}[B_{tj}-B_{tj-1}] = 0$.  Finally, 
 
 \begin{equation}
 \mathbf{E}[r_t]  = \frac{\alpha}{\beta} \bigg(1-e^{-\beta t}\bigg)
